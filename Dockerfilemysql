@@ -1,0 +1,14 @@
+# Utiliser l'image MySQL 5.7
+FROM mysql:5.7
+
+# Définir les variables d'environnement pour MySQL
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=dolibarr
+
+# Exposer le port MySQL
+EXPOSE 3306
+
+# Démarrer MySQL
+CMD ["mysqld"]
+
+

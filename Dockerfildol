@@ -1,0 +1,12 @@
+# Utiliser l'image Dolibarr officielle
+FROM dolibarr/dolibarr
+
+# Configurer la variable d'environnement pour la base de données
+ENV DOLI_DB_HOST=dolibarr-mysql
+ENV DOLI_DB_NAME=dolibarr
+ENV DOLI_DB_USER=root
+ENV DOLI_DB_PASSWORD=root
+
+# Exposer le port web de Dolibarr
+EXPOSE 80
+
