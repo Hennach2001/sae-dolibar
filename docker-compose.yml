@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql_dolibarr
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dolibarr
+      MYSQL_USER: dolibarruser
+      MYSQL_PASSWORD: dolibarrpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - dolinet
+
+  dolibarr:
+    image: dolibarr/dolibarr
+    container_name: dolibarr
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: dolibarruser
+      DB_PASS: dolibarrpassword
+      DB_NAME: dolibarr
+    ports:
+      - "8080:80"
+    volumes:
+      - dolibarr_data:/var/www/html/documents
+    networks:
+      - dolinet
+    depends_on:
+      - db
+
+networks:
+  dolinet:
+
+volumes:
+  db_data:
+  dolibarr_data:
