@@ -1,0 +1,4 @@
+nom,prenom,poste,email,telephone,adresse,ville,code_postal,pays
+Dupont,Jean,Responsable IT,jean.dupont@entreprise.com,0123456789,10 Rue des Lilas,Paris,75001,France
+Martin,Claire,Comptable,claire.martin@entreprise.com,0123456788,12 Avenue du Parc,Lyon,69000,France
+Nguyen,Paul,Technicien,paul.nguyen@entreprise.com,0123456787,5 Boulevard des Nations,Lille,59000,France
