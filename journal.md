@@ -57,4 +57,16 @@
 ### Difficultés rencontrées :
 - manipuler dolibarr 
 
+## Séance n°4 - 25/10, 13h00 - 16h00
+
+### Travail effectué :
+- configurer les modules activé selon notre besoin 
+- générer les fichiers CSV
+- Élaborer une solution pour permettre à Dolibarr de (imporetr/exporter) les données depuis la BD
+
+### À faire pour la prochaine séance :
+- Élaborer une solution pour permettre à Dolibarr de (imporetr/exporter) les données depuis la BD
+- Automatiser le travail 
+
+
 
