@@ -57,7 +57,7 @@
 ### Difficultés rencontrées :
 - manipuler dolibarr 
 
-## Séance n°4 - 25/10, 13h00 - 16h00
+## Séance n°5 - 25/10, 13h00 - 16h00
 
 ### Travail effectué :
 - configurer les modules activé selon notre besoin 
