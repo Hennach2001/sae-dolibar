@@ -29,3 +29,4 @@ services:
         volumes:
             - /home/dolibarr_documents:/var/www/documents
             - /home/dolibarr_custom:/var/www/html/custom
+            - ./activate_modules.php:/var/www/scripts/docker-init.d/activate_modules.php
