@@ -10,6 +10,7 @@ services:
     web:
         image: dolibarr/dolibarr:latest
         environment:
+            DOLI_ENABLE_MODULES: societe,import
             DOLI_DB_HOST: mariadb
             DOLI_DB_USER: root
             DOLI_DB_PASSWORD: root
@@ -20,6 +21,7 @@ services:
             DOLI_INIT_DEMO: 0
             WWW_USER_ID: 1000
             WWW_GROUP_ID: 1000
+
         ports:
             - "80:80"
         links:
