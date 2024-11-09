@@ -123,7 +123,6 @@
 
 **À faire pour la prochaine séance :**  
 - Tester à nouveau le script d’importation des fichiers CSV.  
-- Vérifier la persistance des données après redémarrage.  
 
 ---
 
