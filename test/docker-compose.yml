@@ -1,3 +1,4 @@
+version: "3.3"
 services:
     mariadb:
         image: mariadb:latest
@@ -15,10 +16,10 @@ services:
             DOLI_URL_ROOT: 'http://0.0.0.0'
             PHP_INI_DATE_TIMEZONE: 'Europe/Paris'
         volumes:
-          - ./scripts/docker-init.php:/var/www/scripts/docker-init.php
+          - ./scripts:/var/www/test/scripts  # Le volume monté entre le répertoire ./scripts de l'hôte et /var/www/test/scripts du conteneur
+          - ./data:/var/www/test/data  # Si tu as des fichiers de données comme employes.csv
         ports:
-            - "80:80"
+          - "80:80"
         links:
-            - mariadb
-
+          - mariadb
 
