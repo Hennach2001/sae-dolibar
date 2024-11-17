@@ -1,72 +1,69 @@
 <?php
-// Configuration de la connexion à la base de données Dolibarr
-$host = 'mariadb';  // Nom du service pour MariaDB dans Docker Compose
-$dbname = 'dolibarr';  // Nom de la base de données Dolibarr
-$username = 'root';  // Utilisateur MySQL
-$password = 'root';  // Mot de passe MySQL
+// Configuration de la connexion MySQL
+$mysqli = new mysqli('mariadb', 'root', 'root', 'dolibarr');
 
-// Connexion à la base de données
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connexion réussie à la base de données Dolibarr.\n";
-} catch (PDOException $e) {
-    echo "Erreur de connexion : " . $e->getMessage();
-    exit;
+// Vérifier la connexion
+if ($mysqli->connect_error) {
+    die("Échec de la connexion à la base de données : " . $mysqli->connect_error);
 }
 
-// Lire le fichier CSV
-$csvFile = '/var/www/test/data/employes.csv';  // Chemin du fichier CSV dans le conteneur Docker
-
-if (!file_exists($csvFile)) {
-    echo "Le fichier CSV n'a pas été trouvé.";
-    exit;
+// Lecture du fichier CSV
+$csv_file = '/var/www/scripts/docker-init.d/employes.csv';
+if (!file_exists($csv_file)) {
+    die("Le fichier CSV n'existe pas : $csv_file\n");
 }
 
-$csvData = array_map('str_getcsv', file($csvFile));  // Lire le fichier CSV
-$header = array_shift($csvData);  // Récupérer l'en-tête du fichier CSV
+$handle = fopen($csv_file, 'r');
+if (!$handle) {
+    die("Impossible de lire le fichier CSV.\n");
+}
 
-// Préparer la requête d'insertion
-$query = "INSERT INTO llx_user (firstname, lastname, email, company, birthdate, address, postal_code, town, phone, login) 
-          VALUES (:firstname, :lastname, :email, :company, :birthdate, :address, :postal_code, :town, :phone, :login)";
+// Lire l'en-tête du CSV
+$header = fgetcsv($handle, 0, ',');
 
-$stmt = $pdo->prepare($query);
+// Identifiant du Super Admin
+$fk_user_creat = 1; // ID du Super Admin
 
-// Parcourir les lignes du CSV et insérer dans la base de données
-foreach ($csvData as $row) {
-    // Mapper les données du CSV aux colonnes de la table llx_user
+// Parcourir les lignes du fichier CSV
+while (($row = fgetcsv($handle, 0, ',')) !== false) {
     $data = array_combine($header, $row);
 
-    // Vérification des données essentielles
-    if (empty($data['email']) || empty($data['nom']) || empty($data['prénom'])) {
-        echo "Ligne ignorée : données manquantes pour " . $data['nom'] . " " . $data['prénom'] . "\n";
-        continue;  // Ignore la ligne si des données essentielles sont manquantes
-    }
+    // Préparer les données pour l'insertion
+    $lastname = $mysqli->real_escape_string($data['nom']);
+    $firstname = $mysqli->real_escape_string($data['prénom']);
+    $email = $mysqli->real_escape_string($data['email']);
+    $phone = $mysqli->real_escape_string($data['telephone']);
+    $address = $mysqli->real_escape_string($data['adresse']);
+    $zip = $mysqli->real_escape_string($data['code_postal']);
+    $town = $mysqli->real_escape_string($data['ville']);
+    $fk_soc = 'NULL'; // Aucune société associée pour le moment
 
-    // Lier les valeurs aux paramètres de la requête
-    $stmt->bindParam(':firstname', $data['prénom']);
-    $stmt->bindParam(':lastname', $data['nom']);
-    $stmt->bindParam(':email', $data['email']);
-    $stmt->bindParam(':company', $data['societe']);
-    $stmt->bindParam(':birthdate', $data['date_naissance']);
-    $stmt->bindParam(':address', $data['adresse']);
-    $stmt->bindParam(':postal_code', $data['code_postal']);
-    $stmt->bindParam(':town', $data['ville']);
-    $stmt->bindParam(':phone', $data['telephone']);
-    $stmt->bindParam(':login', $data['email']);  // Utilisation de l'email comme login
+    // Insertion dans la table llx_socpeople
+    $query = "
+        INSERT INTO llx_socpeople (lastname, firstname, email, phone, address, zip, town, fk_soc, entity, statut, datec, fk_user_creat)
+        VALUES (
+            '$lastname',
+            '$firstname',
+            '$email',
+            '$phone',
+            '$address',
+            '$zip',
+            '$town',
+            $fk_soc,
+            1, -- Entité (par défaut 1)
+            1, -- Statut actif
+            NOW(),
+            $fk_user_creat
+        )
+    ";
 
-    // Exécuter l'insertion
-    try {
-        if ($stmt->execute()) {
-            echo "Employé " . $data['nom'] . " " . $data['prénom'] . " inséré avec succès.\n";
-        } else {
-            echo "Erreur lors de l'insertion de " . $data['nom'] . " " . $data['prénom'] . ".\n";
-        }
-    } catch (PDOException $e) {
-        echo "Erreur lors de l'insertion de " . $data['nom'] . " " . $data['prénom'] . " : " . $e->getMessage() . "\n";
+    // Exécuter la requête
+    if (!$mysqli->query($query)) {
+        echo "Erreur lors de l'insertion du contact : " . $mysqli->error . "\n";
+    } else {
+        echo "Contact ajouté : $firstname $lastname\n";
     }
 }
 
-echo "Importation terminée.\n";
-?>
-
+fclose($handle);
+$mysqli->close();
