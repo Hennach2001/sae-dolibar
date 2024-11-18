@@ -77,7 +77,7 @@
   - Des ajustements ont été réalisés pour que ces modules soient prêts à l'importation des données.
 
 - **Enrichissement des fichiers CSV :**  
-  - **Mohammed** a enrichi les fichiers **`employes.csv`** et **`clients.csv`** en ajoutant des données réalistes (noms, adresses, contacts), afin de tester des cas d'importation plus proches d'une situation réelle.
+  - **Mohammed** a enrichi les fichiers **`employes.csv`** et **`clients.csv`** en ajoutant des données réalistes (noms, adresses, contacts) avec AI chatgpt, afin de tester des cas d'importation plus proches d'une situation réelle.
 
 - **Documentation de la configuration des modules :**  
   - **Abdessamad** a documenté les paramètres de configuration de chaque module activé, y compris les options de gestion des clients et des produits.
@@ -213,9 +213,6 @@
   - **Abdessamad** a testé ces scripts et a confirmé qu'ils fonctionnent correctement dans l'environnement Docker.  
   - Ces scripts permettent une gestion plus fluide des données dans Dolibarr, et sont maintenant utilisés pour le déploiement en production.
 
-**À faire pour la prochaine séance :**  
-- **Alioun** : Tester les scripts Shell dans l’environnement de pré-production pour vérifier leur robustesse avec des fichiers plus volumineux.  
-- **Abdessamad** : Finaliser la documentation des scripts d’import/export pour une utilisation à grande échelle.  
-- **Mohammed** : Vérifier que le processus d'importation et d'exportation fonctionne de manière fluide avec différents types de données et tailles de fichiers.
+
 
 ---
