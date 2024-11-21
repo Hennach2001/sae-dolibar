@@ -17,7 +17,7 @@ services:
             PHP_INI_DATE_TIMEZONE: 'Europe/Paris'
         volumes:
           - ./scripts/docker-init.php:/var/www/scripts/docker-init.php  # Le volume monté entre le répertoire ./scripts de l'hôte et /var/www/test/scripts du conteneur
-          - ./scripts/import_employees.php:/var/www/scripts/docker-init.d/import_employees.php
+          - ./scripts/import_employees.php:/var/www/documents/import_employees.php
           - ./data/employes.csv:/var/www/scripts/docker-init.d/employes.csv  # Si tu as des fichiers de données comme employes.csv
         ports:
           - "80:80"
