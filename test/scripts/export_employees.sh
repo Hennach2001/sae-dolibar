@@ -1,28 +1,32 @@
 #!/bin/bash
 
-# Nom du conteneur web
-CONTAINER_NAME="test_web_1"
+# Informations de connexion à la base de données
+DB_USER="root"
+DB_PASSWORD="root"
+DB_NAME="dolibarr"
 
-# Exécuter le script d'exportation PHP dans le conteneur
-echo "Lancement de l'exportation des employés vers un fichier CSV..."
-docker-compose exec web php /var/www/test/scripts/export_employees.php
+# Nom du conteneur Docker MariaDB
+CONTAINER_NAME="test_mariadb_1"
 
-# Vérifier si l'exécution a réussi
+# Répertoire de sauvegarde (dans le dossier courant)
+BACKUP_DIR="./sauvegarde"
+
+# Nom du fichier de sauvegarde avec horodatage
+BACKUP_FILE="$BACKUP_DIR/sauvegarde_$(date +'%Y%m%d_%H%M%S').sql"
+
+# Créer le dossier de sauvegarde s'il n'existe pas
+if [ ! -d "$BACKUP_DIR" ]; then
+    mkdir -p "$BACKUP_DIR"
+    echo "Répertoire de sauvegarde créé : $BACKUP_DIR"
+fi
+
+# Commande pour effectuer la sauvegarde
+docker exec -i $CONTAINER_NAME mysqldump -u $DB_USER -p$DB_PASSWORD $DB_NAME > $BACKUP_FILE
+
+# Vérification du succès de la sauvegarde
 if [ $? -eq 0 ]; then
-    echo "Exportation des employés réussie."
+    echo "Sauvegarde réussie : $BACKUP_FILE"
 else
-    echo "Erreur lors de l'exportation des employés."
+    echo "Erreur lors de la sauvegarde."
     exit 1
 fi
-
-# Copier le fichier CSV généré du conteneur vers l'hôte
-docker cp $CONTAINER_NAME:/var/www/test/data/employes_export.csv ./employes_export.csv
-
-# Vérifier si le fichier a été copié avec succès
-if [ -f ./employes_export.csv ]; then
-    echo "Fichier CSV exporté avec succès : ./employes_export.csv"
-else
-    echo "Erreur lors de la copie du fichier CSV."
-    exit 1
-fi
-
