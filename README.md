@@ -333,4 +333,6 @@ Jane Smith,jane.smith@example.com
    ```bash
    ./restore_db.sh
    ```
+## **lien vers le depot github :**
+https://github.com/Hennach2001/sae-dolibarr
 
